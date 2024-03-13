@@ -1,4 +1,5 @@
-;
+create user Pedro identified by Pedro;
+grant connect, resource to Pedro;
 
 drop table matricula;
 drop table turma_dia;
@@ -9,7 +10,6 @@ drop table aluno;
 drop table professor;
 drop table pessoa;
 drop table modalidade;
-
 
 create table modalidade(
 codmod number(4) primary key,
@@ -43,8 +43,6 @@ constraint pk_aluno primary key (cpf),
 constraint fk_pes_aluno foreign key (cpf) references pessoa (cpf));
 
 insert into aluno values(1234,69,1.89);
-
-
 
 create table horario(
 codhorario number(2) primary key,
@@ -84,3 +82,24 @@ codturma number(6),
 constraint pk_matricula primary key(cpf, codturma),
 constraint fk_turma_pes foreign key(cpf) references pessoa (cpf),
 constraint fk_turma_mat foreign key(codturma) references turma (codturma));
+
+select * from pessoa;
+insert into pessoa values (2345, 'Pedro', 'São Carlos', 99999999);
+update professor set cpf = 2345 where cpf = 1234;
+select * from aluno;
+
+select * from pessoa natural join aluno;
+select * from pessoa,aluno where aluno.cpf = pessoa.cpf;
+select * from professor;
+select * from modalidade;
+insert into turma values (123456, 400.99, 2345, 2, 2);
+insert into turma values (2, 399.99, 2345, 2, 2);
+select * from turma;
+delete from turma where codturma = 2;
+alter table turma add contraint uq_turma unique (cpfprof, codhorario);
+
+select p.cpf, pes.nome, t.codturma from professor p, pessoa pes, turma t
+where p.cpf = pes.cpf and p.cpf = t.cpfprof;
+
+select pes.nome, t.codmod from professor p, pessoa pes, turma t
+where p.cpf = pes.cpf and p.cpf = t.cpfprof;
