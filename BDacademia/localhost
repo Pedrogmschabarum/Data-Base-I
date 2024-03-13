@@ -1,2 +1,1 @@
-create user Pedro identified by Pedro;
-grant connect, resource to Pedro
+
