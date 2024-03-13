@@ -1,0 +1,86 @@
+;
+
+drop table matricula;
+drop table turma_dia;
+drop table turma;
+drop table dia_semana;
+drop table horario;
+drop table aluno;
+drop table professor;
+drop table pessoa;
+drop table modalidade;
+
+
+create table modalidade(
+codmod number(4) primary key,
+modalidade varchar(20));
+
+insert into modalidade values(1,'Balet');
+insert into modalidade (codmod, modalidade) values (2,'Crossfit');
+
+
+create table pessoa(
+cpf number(14) primary key,
+nome varchar(20),
+endereco varchar(30),
+telefone number(16));
+
+insert into pessoa values (1234,'Fulano', 'Chapeco',3333333);
+
+create table professor(
+cpf number(14) primary key,
+regcee varchar(10),
+constraint fk_profpessoa foreign key (cpf) references pessoa (cpf));
+
+insert into professor values(1234,'aaa8888');
+insert into professor values(99999,'aaa8888');
+
+create table aluno(
+cpf number(4),
+peso number(5,2),
+altura number(4,2),
+constraint pk_aluno primary key (cpf),
+constraint fk_pes_aluno foreign key (cpf) references pessoa (cpf));
+
+insert into aluno values(1234,69,1.89);
+
+
+
+create table horario(
+codhorario number(2) primary key,
+horai date,
+horaf date);
+
+insert into horario values (2, to_date('09:00:00','hh:mi:ss'), 
+to_date('10:00:00','hh:mi:ss'));
+
+select to_char(horai,'hh:mi:ss') from horario;
+
+create table dia_semana(
+coddia number(1) primary key,
+diasemana varchar(20));
+
+create table turma(
+codturma number(6),
+mensalidade number(5,2),
+cpfprof number(14),
+codmod number(4),
+codhorario number(2),
+constraint pk_turma primary key(codturma),
+constraint fk_turma_prof foreign key (cpfprof) references professor (cpf),
+constraint fk_turma_mod foreign key (codmod) references modalidade (codmod),
+constraint fk_turma_hor foreign key (codhorario) references horario (codhorario));
+
+create table turma_dia (
+coddia number(1),
+codturma number(6),
+constraint pk_turmadia primary key (coddia, codturma),
+constraint fk_coddia foreign key (coddia) references dia_semana(coddia),
+constraint fk_codturma foreign key (codturma) references turma (codturma));
+
+create table matricula(
+cpf number(14),
+codturma number(6),
+constraint pk_matricula primary key(cpf, codturma),
+constraint fk_turma_pes foreign key(cpf) references pessoa (cpf),
+constraint fk_turma_mat foreign key(codturma) references turma (codturma));
